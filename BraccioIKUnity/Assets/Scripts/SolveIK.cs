@@ -3,6 +3,7 @@
 
 using UnityEngine;
 using System.Collections;
+using TMPro;
 
 public class SolveIK : MonoBehaviour {
 
@@ -11,6 +12,12 @@ public class SolveIK : MonoBehaviour {
 
 	public Vector3 targetPosition;
 	public Vector3 currentPosition;
+	public GameObject Text;
+	private TMP_Text textComponent;
+	public GameObject mqtt;
+	private MQTTTest mqttTest;
+	public GameObject handTracker;
+	private HandTrackingTest tracker;
 
 	[Range(0.0f, 180.0f)]
 	public float thetaBase = 90f;
@@ -41,6 +48,9 @@ public class SolveIK : MonoBehaviour {
 		/* pre-calculations */
 		hum_sq = HUMERUS*HUMERUS;
 		uln_sq = ULNA*ULNA;
+		textComponent = Text.GetComponent<TMP_Text>();
+		mqttTest = mqtt.GetComponent<MQTTTest>();
+		tracker = handTracker.GetComponent<HandTrackingTest>();
 	}
 
 	void Update () {
@@ -48,19 +58,28 @@ public class SolveIK : MonoBehaviour {
 		// Set target position from itself
 		targetPosition = transform.position;
 
-		if (useIK) {
-			SetArm (targetPosition.x, targetPosition.y, targetPosition.z, autoEnd);
+		if(useIK){
+			textComponent.text = "X " + targetPosition.x + "\ny " + targetPosition.y + "\nz " + targetPosition.z + "\ngrab " + mqttTest.isGrip + "\nrotx " + mqttTest.thetaWristVertical + "\nrotz " + mqttTest.thetaWristRotation;
+			SetArm(targetPosition.x, targetPosition.y, targetPosition.z, autoEnd);
 		}
+		// Update robot arm model withou gripper
+		thetaWristVertical = this.transform.rotation.eulerAngles.x;
+		thetaWristRotation = this.transform.rotation.eulerAngles.z;
+		arms[0].transform.localRotation = Quaternion.Euler(new Vector3(0f, thetaBase, 0f));
+		arms[1].transform.localRotation = Quaternion.Euler(new Vector3(0f, 0f, thetaShoulder - 90f));
+		arms[2].transform.localRotation = Quaternion.Euler(new Vector3(0f, 0f, thetaElbow - 90f));
+		arms[3].transform.localRotation = Quaternion.RotateTowards(arms[3].transform.localRotation, Quaternion.Euler(new Vector3(0f, 0f, -1f * mqttTest.thetaWristVertical)), 0.5f);
+		arms[4].transform.localRotation = Quaternion.Euler(new Vector3(0f, mqttTest.thetaWristRotation, 0f));
 
-		// Update robot arm model
-		arms [0].transform.localRotation = Quaternion.Euler(new Vector3 (0f, thetaBase, 0f));
-		arms [1].transform.localRotation = Quaternion.Euler(new Vector3 (0f, 0f, thetaShoulder - 90f));
-		arms [2].transform.localRotation = Quaternion.Euler(new Vector3 (0f, 0f, thetaElbow - 90f));
-		arms [3].transform.localRotation = Quaternion.Euler(new Vector3 (0f, 0f, thetaWristVertical - 90f));
-		arms [4].transform.localRotation = Quaternion.Euler(new Vector3 (0f, thetaWristRotation, 0f));
+		// Debug.Log(thetaBase);
+		//Debug.Log(thetaShoulder - 90f);
+		//Debug.Log(thetaElbow - 90f);
+		//Debug.Log(thetaWristVertical - 90f);
+		//Debug.Log(thetaWristRotation);
+		//shoud send each theta by mqtt from hololens2 to arduino
 
 		// Current wrist position
-		currentPosition = arms [3].transform.position;
+		currentPosition = arms[3].transform.position;
 	}
 
 	void SetArm(float x, float y, float z, bool endHorizontal) {
