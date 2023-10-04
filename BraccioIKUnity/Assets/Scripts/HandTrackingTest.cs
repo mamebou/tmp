@@ -21,17 +21,19 @@ public class HandTrackingTest : MonoBehaviour
     private const float GrabThreshold = 0.4f;
     public bool isGrab = false;
     public bool isStart = false;
-    private bool isFinishCount = false;
+    public bool isFinishCount = false;
     public GameObject homePosition;
     public GameObject startButton;
     public GameObject resetButton;
     public float countDown = 3f;
+    public GameObject directionText;
 
 
     void Start()
     {
         indexTip = GameObject.CreatePrimitive(PrimitiveType.Cube);  //表示用の立方体を作成
         indexTip.transform.localScale = new Vector3(0.03f, 0.03f, 0.03f);  //大きさを指定
+        directionText.SetActive(false);
 
     }
 
@@ -93,6 +95,7 @@ public class HandTrackingTest : MonoBehaviour
                         if(countDown < 0f){
                             isFinishCount = true;
                             homePosition.SetActive(false);
+                            directionText.SetActive(false);
                         }
                     }
                     else{
@@ -121,8 +124,10 @@ public class HandTrackingTest : MonoBehaviour
     public void start(){
         startButton.SetActive(false);
         resetButton.SetActive(false);
-        if(!isFinishCount)
+        if(!isFinishCount){
+            directionText.SetActive(true);
             homePosition.SetActive(true);
+        }
         isStart = true;
     }
 

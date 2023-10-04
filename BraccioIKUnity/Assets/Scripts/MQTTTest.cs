@@ -24,6 +24,9 @@ public class MQTTTest : MonoBehaviour
     public string hololensTopic = "mytopic/mqtt";
     public string testTopic = "mytopic/test";
     public bool wait = true;
+    private float prevThetaWristVertical = 0f;
+    private float secondPrevThetaWristVertical = 0f;
+    private float currentThetaWristVertical = 0f;
 
     async void Start()
     {
@@ -76,7 +79,14 @@ public class MQTTTest : MonoBehaviour
             stringBuilder.AppendLine($"QoS = {e.ApplicationMessage.QualityOfServiceLevel}");
             stringBuilder.AppendLine($"Retain = {e.ApplicationMessage.Retain}");
             string[] data = Encoding.UTF8.GetString(e.ApplicationMessage.Payload).Split(' ');
-            thetaWristVertical = roundOnePlace(float.Parse(data[0]) * Mathf.Rad2Deg);
+            if(tracker.isFinishCount && tracker.isStart){
+                currentThetaWristVertical = roundOnePlace(float.Parse(data[0]) * Mathf.Rad2Deg);
+                if(prevThetaWristVertical == currentThetaWristVertical && currentThetaWristVertical == secondPrevThetaWristVertical){
+                    thetaWristVertical = roundOnePlace(float.Parse(data[0]) * Mathf.Rad2Deg);
+                }
+                prevThetaWristVertical = currentThetaWristVertical;
+                secondPrevThetaWristVertical = prevThetaWristVertical;
+            }
             thetaWristRotation = 90f;
             numButton = int.Parse(data[3]);
             rcvCount++;
@@ -121,7 +131,7 @@ public class MQTTTest : MonoBehaviour
                 .WithExactlyOnceQoS()
                 .Build();
             try{
-                if(wait == false){
+                if(wait == false && tracker.isFinishCount && tracker.isStart){
                     await mqttClient.PublishAsync(message);
                     wait = true;
                 }
