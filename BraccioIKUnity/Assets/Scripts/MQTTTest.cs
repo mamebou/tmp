@@ -118,18 +118,26 @@ public class MQTTTest : MonoBehaviour
             else{
                 IK.thetaGripper = 10f;
             }
-            
+
+
 
             var message = new MqttApplicationMessageBuilder()
                 .WithTopic("johnson65/helloworld")
                 .WithPayload(Mathf.RoundToInt(IK.thetaBase) + "," + 
                             (280f - (Mathf.RoundToInt(IK.thetaShoulder) + 50f)) + "," + 
-                            (180f - Mathf.RoundToInt(IK.thetaElbow - 100f)) + "," + 
+                            (180f - Mathf.RoundToInt(IK.thetaElbow - 20f)) + "," + 
                             (thetaWristVertical + 90f) + "," + 
                             Mathf.RoundToInt(thetaWristRotation) + "," + 
                             Mathf.RoundToInt(IK.thetaGripper) + ";")
                 .WithExactlyOnceQoS()
-                .Build();
+                .Build();            
+            
+
+            if(IK.resetPublish){
+                IK.resetPublish = false;
+                await mqttClient.PublishAsync(message);
+            }
+
             try{
                 if(wait == false && tracker.isFinishCount && tracker.isStart){
                     await mqttClient.PublishAsync(message);

@@ -27,6 +27,9 @@ public class HandTrackingTest : MonoBehaviour
     public GameObject resetButton;
     public float countDown = 3f;
     public GameObject directionText;
+    public bool resetRobot = false;
+    public GameObject IKsolver;
+    private SolveIK IK;
 
 
     void Start()
@@ -34,6 +37,7 @@ public class HandTrackingTest : MonoBehaviour
         indexTip = GameObject.CreatePrimitive(PrimitiveType.Cube);  //表示用の立方体を作成
         indexTip.transform.localScale = new Vector3(0.03f, 0.03f, 0.03f);  //大きさを指定
         directionText.SetActive(false);
+        IK = IKsolver.GetComponent<SolveIK>();
 
     }
 
@@ -135,6 +139,9 @@ public class HandTrackingTest : MonoBehaviour
         isStart = false;
         isFirstDitect = true;
         isFinishCount = false;
+        resetRobot = true;
+        IK.targetPosition = IK.initialTargetPosition;
+        IKsolver.transform.position = IK.initialTargetPosition;
     }
 
     public void menue(){

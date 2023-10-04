@@ -18,6 +18,8 @@ public class SolveIK : MonoBehaviour {
 	private MQTTTest mqttTest;
 	public GameObject handTracker;
 	private HandTrackingTest tracker;
+	public bool resetPublish = false;
+	public Vector3 initialTargetPosition;
 
 	[Range(0.0f, 180.0f)]
 	public float thetaBase = 90f;
@@ -51,12 +53,17 @@ public class SolveIK : MonoBehaviour {
 		textComponent = Text.GetComponent<TMP_Text>();
 		mqttTest = mqtt.GetComponent<MQTTTest>();
 		tracker = handTracker.GetComponent<HandTrackingTest>();
+		initialTargetPosition = targetPosition;
 	}
 
 	void Update () {
 
 		// Set target position from itself
 		targetPosition = transform.position;
+		if(tracker.resetRobot){
+			resetPublish = true;
+			tracker.resetRobot = false;
+		}
 
 		if(useIK){
 			textComponent.text = "X " + targetPosition.x + "\ny " + targetPosition.y + "\nz " + targetPosition.z + "\ngrab " + mqttTest.isGrip + "\nrotx " + mqttTest.thetaWristVertical + "\nrotz " + mqttTest.thetaWristRotation;

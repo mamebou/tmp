@@ -30,9 +30,6 @@ void loop() {
       getValue(data, ',', 4).toInt(), 
       getValue(data, ',', 5).toInt());
   }
-  else{
-    Braccio.ServoMovement(0, 90, 130, 90, 90, 90, 60);
-  }
 }
 
 String getValue(String data, char separator, int index)
