@@ -34,7 +34,6 @@ def connect_mqtt() -> mqtt_client:
 def subscribe(client: mqtt_client):
     def on_message(client, userdata, msg):
         c = ser.readline()
-        print(c)
         ser.write(bytes(msg.payload.decode(), 'UTF-8'))
     client.subscribe(topic)
     client.on_message = on_message
@@ -43,6 +42,7 @@ def subscribe(client: mqtt_client):
 def run():
     client = connect_mqtt()
     subscribe(client)
+    ser.write(bytes("180,138,21,90,90,60;", 'UTF-8'))
     client.loop_forever()
 
 
