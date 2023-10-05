@@ -14,7 +14,7 @@ public class MQTTTest : MonoBehaviour
     public GameObject aolver;
     private bool isConnect = false;
     private int count = 0;
-    public float thetaWristVertical = 90f;
+    public float thetaWristVertical = 0f;
     public float thetaWristRotation = 90f;
     public GameObject handTracker;
 	private HandTrackingTest tracker;
