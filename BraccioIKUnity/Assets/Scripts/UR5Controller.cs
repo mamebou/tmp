@@ -354,15 +354,21 @@ public class UR5Controller : MonoBehaviour
             phi = controlCube.transform.eulerAngles.x * Mathf.Deg2Rad;
             theta = controlCube.transform.eulerAngles.y * Mathf.Deg2Rad;
             psi = controlCube.transform.eulerAngles.z * Mathf.Deg2Rad;
-            Debug.Log(x);
 
-            Robot11.Solve(-1 * y, x, -1 * z, phi, theta, psi);
-
+            //Robot11.Solve(-1 * y, x, -1 * z, phi, theta, psi);
+            Robot11.Solve(x, y, z, phi, theta, psi);
             for (int j = 0; j < 6; j++)
             {
                 Vector3 currentRotation = jointList[j].transform.localEulerAngles;
                 currentRotation.z = Robot11.solutionArray[j];
-                jointList[j].transform.localEulerAngles = currentRotation;
+                Debug.Log(Robot11.solutionArray[j]);
+                try{
+                    jointList[j].transform.localEulerAngles = currentRotation;
+                }
+                catch(System.Exception){
+                    break;
+                }
+                
             }
 
             counter++;

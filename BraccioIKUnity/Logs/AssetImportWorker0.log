@@ -1,0 +1,21 @@
+Using pre-set license
+Built from '2020.3/release' branch; Version is '2020.3.15f2 (6cf78cb77498) revision 7141260'; Using compiler version '192528614'; Build Type 'Release'
+OS: 'Windows 10 Home; OS build 22621.2283; Version 2009; 64bit' Language: 'en' Physical Memory: 32593 MB
+BatchMode: 1, IsHumanControllingUs: 0, StartBugReporterOnCrash: 0, Is64bit: 1, IsPro: 0
+
+ COMMAND LINE ARGUMENTS:
+C:\Program Files\Unity\Hub\Editor\2020.3.15f2\Editor\Unity.exe
+-adb2
+-batchMode
+-noUpm
+-name
+AssetImportWorker0
+-projectPath
+C:/UnityProject/braccio-ik-unity/BraccioIKUnity
+-logFile
+Logs/AssetImportWorker0.log
+-srvPort
+57101
+Successfully changed project path to: C:/UnityProject/braccio-ik-unity/BraccioIKUnity
+C:/UnityProject/braccio-ik-unity/BraccioIKUnity
+Using Asset Import Pipeline V2.

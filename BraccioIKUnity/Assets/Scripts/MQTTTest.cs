@@ -79,6 +79,7 @@ public class MQTTTest : MonoBehaviour
             stringBuilder.AppendLine($"QoS = {e.ApplicationMessage.QualityOfServiceLevel}");
             stringBuilder.AppendLine($"Retain = {e.ApplicationMessage.Retain}");
             string[] data = Encoding.UTF8.GetString(e.ApplicationMessage.Payload).Split(' ');
+            Debug.Log(data[0] + " " + data[1] + " " + data[2]);
             if(tracker.isFinishCount && tracker.isStart){
                 currentThetaWristVertical = roundOnePlace(float.Parse(data[0]) * Mathf.Rad2Deg);
                 if(prevThetaWristVertical == currentThetaWristVertical && currentThetaWristVertical == secondPrevThetaWristVertical){
