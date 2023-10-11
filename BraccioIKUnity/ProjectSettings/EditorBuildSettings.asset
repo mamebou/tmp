@@ -5,9 +5,12 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/BraccioIK.unity
     guid: 673689650e143469e90e60b5b3377ff7
+  - enabled: 1
+    path: Assets/Scenes/ur5control.unity
+    guid: d8e32b99113738946934025169793d7a
   m_configObjects:
     Unity.XR.WindowsMR.Settings: {fileID: 11400000, guid: 51098f973d8edc946bceaa8267a2ea61,
       type: 2}

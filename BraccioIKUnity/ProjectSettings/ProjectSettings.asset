@@ -136,7 +136,6 @@ PlayerSettings:
   - {fileID: 7902008458958364789, guid: 492812b7c2a18bc4f878cf5f819e65ff, type: 2}
   - {fileID: 1415244084518273277, guid: cad3340ce2e301a40862c8707f3f2e4a, type: 2}
   - {fileID: -801519497065235935, guid: 51098f973d8edc946bceaa8267a2ea61, type: 2}
-  - {fileID: 0}
   metroInputSource: 0
   wsaTransparentSwapchain: 0
   m_HolographicPauseOnTrackingLoss: 1
@@ -631,7 +630,7 @@ PlayerSettings:
   metroSplashScreenUseBackgroundColor: 1
   platformCapabilities:
     WindowsStoreApps:
-      EnterpriseAuthentication: False
+      CodeGeneration: False
       OfflineMapsManagement: False
       HumanInterfaceDevice: False
       Location: False
@@ -665,10 +664,10 @@ PlayerSettings:
       PointOfService: False
       RecordedCallsFolder: False
       Contacts: False
-      InternetClient: True
-      CodeGeneration: False
-      BackgroundMediaPlayback: False
       Proximity: False
+      InternetClient: True
+      BackgroundMediaPlayback: False
+      EnterpriseAuthentication: False
   metroTargetDeviceFamilies:
     Desktop: False
     Holographic: False
