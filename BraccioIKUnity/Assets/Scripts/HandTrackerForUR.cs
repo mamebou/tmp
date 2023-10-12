@@ -14,12 +14,14 @@ public class HandTrackerForUR : MonoBehaviour
     private float[] pPos = new float[3];
     private float[] pRot = new float[3];
     public float adjust = 1f;
+    public GameObject mqttManager;
+    private mqttForUR mqtt;
     // Start is called before the first frame update
     void Start()
     {
         indexTip = GameObject.CreatePrimitive(PrimitiveType.Cube);  //表示用の立方体を作成
         indexTip.transform.localScale = new Vector3(0.03f, 0.03f, 0.03f);  //大きさを指定
-        
+        mqtt = mqttManager.GetComponent<mqttForUR>();
     }
 
     // Update is called once per frame
@@ -53,7 +55,6 @@ public class HandTrackerForUR : MonoBehaviour
             pos.z = target.transform.position.z + dPosition[2] * adjust;
 
             Quaternion rot = target.transform.rotation;
-            Debug.Log(target.transform.rotation.x);
             rot.x = target.transform.rotation.x + drotation[0];
             rot.y = target.transform.rotation.y + drotation[1];
             rot.z = target.transform.rotation.z + drotation[2];
@@ -62,7 +63,13 @@ public class HandTrackerForUR : MonoBehaviour
             target.transform.position = pos;
 
             //姿勢更新
-            target.transform.rotation = rot;
+            Vector3 angles = target.transform.localEulerAngles;
+            angles.x = mqtt.y;
+            angles.y = (180f - mqtt.x);
+            angles.z = 0f;
+            target.transform.localEulerAngles = angles;
+
+
             //ひとつ前の位置姿勢更新
 
             pPos[0] = indexTip.transform.position.x;
