@@ -92,7 +92,6 @@ x0 = np.zeros((2,))
 isInitial = False
 x = x0
 c = 0
-q = 0
 b = 0
 r = 0
 cgy = 0
@@ -105,19 +104,19 @@ beta = 0.041
 # ekf init
 x = np.array([[0], [0], [0]])
 P = np.diag([1.74E-2*dt**2, 1.74E-2*dt**2, 1.74E-2*dt**2])
-
+alpha = 0.98  # ジャイロスコープの重み
+dt = 0.01  # サンプリング間隔（秒）
+q = np.array([1.0, 0.0, 0.0, 0.0])  # 初期クォータニオン [w, x, y, z]
 
 # コールバック関数: データが送信されたときに呼び出されます
 def notification_handler(sender: int, data: bytearray, **_kwargs):
-    global beta
+    global alpha
+    global dt
+    global q
     imu_data = data.decode().split()
-    acc = np.array([float(imu_data[4]), float(imu_data[5]), float(imu_data[6])])
-    gyro = np.array([float(imu_data[0]), float(imu_data[1]), float(imu_data[2])])
-    numButton = imu_data[7]
-    roll, pitch, yaw = madgwick_filter(acc, gyro, beta)
-    print("Roll: {:.2f} degrees".format(math.degrees(roll)))
-    print("Pitch: {:.2f} degrees".format(math.degrees(pitch)))
-    print("Yaw: {:.2f} degrees".format(math.degrees(yaw)))
+    msg = data.decode()
+    m_client.publish(topic, msg)
+    print(msg)
 
 
 

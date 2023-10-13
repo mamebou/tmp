@@ -99,7 +99,6 @@ def notification_handler(sender: int, data: bytearray, **_kwargs):
         acc = np.array([float(imu_data[4]), float(imu_data[5]), float(imu_data[6])])
         gyro = np.array([float(imu_data[0]), float(imu_data[1]), float(imu_data[2])])
         numButton = imu_data[7]
-        print(numButton)
         ts = time.time()
         if ts_pre is not None:
             dt = ts - ts_pre
@@ -112,7 +111,8 @@ def notification_handler(sender: int, data: bytearray, **_kwargs):
             msg = str(x[0][0]) + " " + str(x[1][0]) + " " + str(x[2][0]) + " " + numButton
             m_client.publish(topic, msg)
             # send to viz
-            #Rxyz = convert_euler_to_Rxyz(x)
+            Rxyz = convert_euler_to_Rxyz(x)
+            print(Rxyz)
             #r11, r12, r13 = Rxyz[0][0], Rxyz[0][1], Rxyz[0][2]
             #r21, r22, r23 = Rxyz[1][0], Rxyz[1][1], Rxyz[1][2]
             #r31, r32, r33 = Rxyz[2][0], Rxyz[2][1], Rxyz[2][2]
