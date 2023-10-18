@@ -13,6 +13,7 @@ public class mqttForUR : MonoBehaviour
     public float x = 0f;
     public float y = 0f;
     public float z = 0f;
+    public float w = 0f;
 
     async void Start()
     {
@@ -54,8 +55,8 @@ public class mqttForUR : MonoBehaviour
             string[] data = Encoding.UTF8.GetString(e.ApplicationMessage.Payload).Split(' ');
             x = float.Parse(data[0]) * Mathf.Rad2Deg;
             y = float.Parse(data[1]) * Mathf.Rad2Deg;
-            z = float.Parse(data[2]) * Mathf.Rad2Deg;
-            Debug.Log(x);
+            z = float.Parse(data[2]);
+            Debug.Log(x + " " + y);
         };
 
         await mqttClient.ConnectAsync(options);

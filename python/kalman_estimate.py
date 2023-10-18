@@ -1,13 +1,11 @@
 import asyncio
 from bleak import BleakScanner, BleakClient
 from imu_ekf import *
+import numpy as np
 import time
 from paho.mqtt import client as mqtt_client
 import random
-import math
-import numpy as np
-
-
+from Quaternion import Quat
 
 broker = 'test.mosquitto.org'
 port = 1883
@@ -30,49 +28,47 @@ def connect_mqtt():
     client.connect(broker, port)
     return client
 
+#for ekf
+def calc_u(gyro, dt):
+    gyro = np.array([
+        [gyro[0]],
+        [gyro[1]],
+        [gyro[2]]
+    ])
+    u = gyro * dt
+    return u
 
-def normalize(v):
-    norm = np.linalg.norm(v)
-    if norm == 0:
-        return v
-    return v / norm
+def calc_z(acc):
+    z = np.array([
+        [np.arctan(acc[1]/acc[2])], 
+        [-np.arctan(acc[0]/np.sqrt(acc[1]**2+acc[2]**2))]
+        ])
+    return z
 
-def madgwick_filter(accel, gyro, beta):
-    q = np.array([1.0, 0.0, 0.0, 0.0]) # 初期のクォータニオン
-    sample_period = 1.0 / 100.0 # サンプリング周期 (100 Hzの場合)
-
-    for i in range(len(accel)):
-        accel[i] = normalize(accel[i])
-        gyro[i] = normalize(gyro[i])
-
-        q0, q1, q2, q3 = q
-        ax, ay, az = accel[i]
-        gx, gy, gz = gyro[i]
-
-        s0 = 2.0 * (q1 * q3 - q0 * q2)
-        s1 = 2.0 * (q0 * q1 + q2 * q3)
-        s2 = q0**2 - q1**2 - q2**2 + q3**2
-        s3 = 2.0 * (q1 * q2 - q0 * q3)
-
-        q_dot1 = 0.5 * (-s1 * gx - s2 * gy - s3 * gz)
-        q_dot2 = 0.5 * (s0 * gx + s2 * gz - s3 * gy)
-        q_dot3 = 0.5 * (s0 * gy - s1 * gz + s3 * gx)
-        q_dot4 = 0.5 * (s0 * gz + s1 * gy - s2 * gx)
-
-        q0 += q_dot1 * sample_period
-        q1 += q_dot2 * sample_period
-        q2 += q_dot3 * sample_period
-        q3 += q_dot4 * sample_period
-
-        norm = math.sqrt(q0**2 + q1**2 + q2**2 + q3**2)
-        q = np.array([q0, q1, q2, q3]) / norm
-    roll = math.atan2(2.0 * (q0 * q1 + q2 * q3), 1 - 2 * (q1**2 + q2**2))
-    pitch = math.asin(2.0 * (q0 * q2 - q3 * q1))
-    yaw = math.atan2(2.0 * (q0 * q3 + q1 * q2), 1 - 2 * (q2**2 + q3**2))
-    return roll, pitch, yaw
-
-
-
+def convert_euler_to_Rxyz(x):
+    c1 = np.cos(x[0][0])
+    s1 = np.sin(x[0][0])
+    c2 = np.cos(x[1][0])
+    s2 = np.sin(x[1][0])
+    c3 = np.cos(x[2][0])
+    s3 = np.sin(x[2][0])
+    Rx = np.array([
+        [1, 0, 0],
+        [0, c1, -s1],
+        [0, s1, c1],
+    ])
+    Ry = np.array([
+        [c2, 0, s2],
+        [0, 1, 0],
+        [-s2, 0, c2],
+    ])
+    Rz = np.array([
+        [c3, -s3, 0],
+        [s3, c3, 0],
+        [0, 0, 1],
+    ])
+    Rxyz = Rz @ Ry @ Rx
+    return Rxyz
 
 # ESP32のデバイスを識別するためのUUID (これはデバイスにより異なります) 
 
@@ -86,40 +82,43 @@ ts_pre = None
 dt = 0.01
 m_client = None
 count = 1
-m6a0 = np.zeros((3,))
-m6g0 = np.zeros((3,))
-x0 = np.zeros((2,))
-isInitial = False
-x = x0
-c = 0
-b = 0
-r = 0
-cgy = 0
-P = 9
-Ts = 0
-Yaw = 0
-Tri = 0
-beta = 0.041
+calib = [0, 0, 0]
+sum = [0, 0, 0]
+isCalib = False
 
 # ekf init
 x = np.array([[0], [0], [0]])
 P = np.diag([1.74E-2*dt**2, 1.74E-2*dt**2, 1.74E-2*dt**2])
-alpha = 0.98  # ジャイロスコープの重み
-dt = 0.01  # サンプリング間隔（秒）
-q = np.array([1.0, 0.0, 0.0, 0.0])  # 初期クォータニオン [w, x, y, z]
 
 # コールバック関数: データが送信されたときに呼び出されます
 def notification_handler(sender: int, data: bytearray, **_kwargs):
-    global alpha
-    global dt
-    global q
-    imu_data = data.decode().split()
-    msg = data.decode()
-    m_client.publish(topic, msg)
-    print(msg)
-
-
-
+        global ts_pre
+        global x
+        global P
+        global topic
+        global m_client
+        global calib
+        global sum
+        global count
+        global isCalib
+        imu_data = data.decode().split()
+        gyro = np.array([float(imu_data[0]), float(imu_data[1]), float(imu_data[2]), float(imu_data[3])])
+        w = gyro[3]
+        x = gyro[0]
+        y = gyro[1]
+        z = gyro[2]
+        a = np.sqrt(w**2 + x**2 + y**2 + z**2)
+        data = [y/a, x/a, z/a, w/a]
+        q = Quat(data)
+        rpy = [q.dec,-q.roll,q.ra]
+        for i in range(3):
+            if  rpy[i-1] > 180:
+                rpy[i-1] -= 360
+            elif rpy[i-1] <  -180:
+                rpy[i-1] += 360
+        msg = str(rpy[0]) + " " + str(rpy[1]) + " " + str(rpy[2])
+        print(msg)
+        m_client.publish(topic, msg)
 
 async def run():
     global m_client
@@ -135,7 +134,6 @@ async def run():
             #print(f'name:{device.name},address:{device.address}')
             client = BleakClient(device)
             clients.append(client)
-
 
     try:
         # 2. クライアント（ESP32などのデバイス）とデータのやり取りをする

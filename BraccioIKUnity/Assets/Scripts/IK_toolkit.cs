@@ -95,7 +95,8 @@ public class IK_toolkit : MonoBehaviour
             // Iterate through each joint in the robot and apply the joint angles
             for (int i = 0; i < robotJoints.Count; i++)
             {
-                robotJoints[i].localEulerAngles = ConvertJointAngles(jointSolutions[i, solutionIndex], i);
+                if(i != 3 && i != 4)
+                    robotJoints[i].localEulerAngles = ConvertJointAngles(jointSolutions[i, solutionIndex], i);
             }
         }
         else

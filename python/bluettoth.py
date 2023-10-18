@@ -112,7 +112,7 @@ def notification_handler(sender: int, data: bytearray, **_kwargs):
             m_client.publish(topic, msg)
             # send to viz
             Rxyz = convert_euler_to_Rxyz(x)
-            print(Rxyz)
+            print(msg)
             #r11, r12, r13 = Rxyz[0][0], Rxyz[0][1], Rxyz[0][2]
             #r21, r22, r23 = Rxyz[1][0], Rxyz[1][1], Rxyz[1][2]
             #r31, r32, r33 = Rxyz[2][0], Rxyz[2][1], Rxyz[2][2]
