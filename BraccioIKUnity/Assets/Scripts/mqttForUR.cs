@@ -56,7 +56,6 @@ public class mqttForUR : MonoBehaviour
             x = float.Parse(data[0]) * Mathf.Rad2Deg;
             y = float.Parse(data[1]) * Mathf.Rad2Deg;
             z = float.Parse(data[2]);
-            Debug.Log(x + " " + y);
         };
 
         await mqttClient.ConnectAsync(options);

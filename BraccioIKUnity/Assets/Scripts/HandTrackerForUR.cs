@@ -7,7 +7,7 @@ using System;
 
 public class HandTrackerForUR : MonoBehaviour
 {
-    GameObject indexTip;
+    public GameObject indexTip;
     public GameObject target;
     private float[] dPosition = new float[3] {0f, 0f, 0f};
     private float[] drotation = new float[3] {0f, 0f, 0f};
@@ -36,6 +36,7 @@ public class HandTrackerForUR : MonoBehaviour
     public float countDown = 3f;
     private float prevX = 0f;
     private float prevY = 0f;
+    private Vector3 initisalHomePosition;
 
     // Start is called before the first frame update
     void Start()
@@ -44,6 +45,7 @@ public class HandTrackerForUR : MonoBehaviour
         indexTip.transform.localScale = new Vector3(0.03f, 0.03f, 0.03f);  //大きさを指定
         mqtt = mqttManager.GetComponent<mqttForUR>();
         initialTargetPosition = target.transform.position;
+        initisalHomePosition = homePosition.transform.position;
         directionText.SetActive(false);
         homePosition.SetActive(false);
     }
@@ -89,10 +91,6 @@ public class HandTrackerForUR : MonoBehaviour
 
                     //position更新
                     target.transform.position = pos;
-                    theta = baseObject.transform.localEulerAngles.z;
-
-                    thetaAdjust = theta / 90f;
-                    Debug.Log("X: " + mqtt.x + "Y: " + mqtt.y);
                     //姿勢更新
                     //target.transform.rotation = rot;
                     if(mqtt.y < 15f && mqtt.y > -15f){
@@ -103,7 +101,7 @@ public class HandTrackerForUR : MonoBehaviour
                         }
                     }
 
-                    if(Math.Abs(prevY - (mqtt.y - 90f)) > 10f){
+                    if(Math.Abs(prevY - (mqtt.y - 90f)) > 20f){
                         Vector3 wrist2Angles = new Vector3(-90f, 0f, mqtt.y - 90f);
                         Wrist2.transform.localEulerAngles = wrist2Angles;
                         prevY = mqtt.y - 90f;
@@ -128,6 +126,7 @@ public class HandTrackerForUR : MonoBehaviour
                             isFinishCount = true;
                             homePosition.SetActive(false);
                             directionText.SetActive(false);
+                            countDown = 3f;
                         }
                     }
                     else{
@@ -155,6 +154,7 @@ public class HandTrackerForUR : MonoBehaviour
         isFinishCount = false;
         resetRobot = true;
         target.transform.position = initialTargetPosition;
+        homePosition.transform.position = initisalHomePosition;
     }
 
     public void menue(){

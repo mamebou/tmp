@@ -340,6 +340,11 @@ PrefabInstance:
       propertyPath: m_CollisionDetection
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3876353291639202204, guid: 1cd92536b9643b74d9f9ef5ad90ec618,
+        type: 3}
+      propertyPath: m_Size.y
+      value: 90.2
+      objectReference: {fileID: 0}
     - target: {fileID: 5110037265013110935, guid: 1cd92536b9643b74d9f9ef5ad90ec618,
         type: 3}
       propertyPath: m_Name
@@ -1333,7 +1338,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 97377269}
-  adjust: 5
+  adjust: 3
   mqttManager: {fileID: 1508441705}
   baseObject: {fileID: 1298977828}
   Wrist1: {fileID: 515410758}
