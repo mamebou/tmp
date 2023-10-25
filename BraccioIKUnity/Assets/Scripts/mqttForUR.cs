@@ -14,6 +14,14 @@ public class mqttForUR : MonoBehaviour
     public float y = 0f;
     public float z = 0f;
     public float w = 0f;
+    private int count = 0;
+    private bool isConnect = false;
+    public GameObject Base;
+    public GameObject Sholder;
+    public GameObject Elbow;
+    public GameObject Wrist1;
+    public GameObject Wrist2;
+    
 
     async void Start()
     {
@@ -24,12 +32,14 @@ public class mqttForUR : MonoBehaviour
             .WithTcpServer("test.mosquitto.org")
             .Build();
 
-        mqttClient.Connected += (s, e) => Debug.Log("接続したときの処理");
-
+        mqttClient.Connected += (s, e) =>{
+            Debug.Log("接続したときの処理");
+            isConnect = true;
+        }; 
         mqttClient.Disconnected += async (s, e) =>
         {
             Debug.Log("切断したときの処理");
-
+            isConnect = false;
             if (e.Exception == null)
             {
                 Debug.Log("意図した切断です");
@@ -63,12 +73,27 @@ public class mqttForUR : MonoBehaviour
         await mqttClient.SubscribeAsync(new TopicFilterBuilder().WithTopic("mytopic/mqtt").Build());
 
         var message = new MqttApplicationMessageBuilder()
-            .WithTopic("mytopic/ur")
+            .WithTopic("harutakatopic/ur")
             .WithPayload("Hello World")
             .WithExactlyOnceQoS()
             .Build();
 
         await mqttClient.PublishAsync(message);
+    }
+
+    async void Update(){
+        count++;
+        if(count == 10 && isConnect){
+            var message = new MqttApplicationMessageBuilder()
+                .WithTopic("harutakatopic/ur")
+                .WithPayload(Base.transform.rotation.z + "," + Sholder.transform.rotation.z + "," + Elbow.transform.rotation.z + "," + Wrist1.transform.rotation.z + "," + Wrist2.transform.rotation.z)
+                .WithExactlyOnceQoS()
+                .Build();
+            float[] test = new float[3]{0f,0f,0f};
+            Debug.Log(JsonUtility.ToJson(test));
+            await mqttClient.PublishAsync(message);
+            count = 0;
+        }
     }
 
     async void OnDestroy(){
