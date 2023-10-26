@@ -661,6 +661,12 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 593249583}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &852831537 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3448856237706050858, guid: c88c68b6d131848439f2c869ef875041,
+    type: 3}
+  m_PrefabInstance: {fileID: 1277959744}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &890475110
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1406,6 +1412,11 @@ MonoBehaviour:
   y: 0
   z: 0
   w: 0
+  Base: {fileID: 1298977828}
+  Sholder: {fileID: 852831537}
+  Elbow: {fileID: 1686141604}
+  Wrist1: {fileID: 515410758}
+  Wrist2: {fileID: 444096847}
 --- !u!4 &1508441707
 Transform:
   m_ObjectHideFlags: 0
@@ -1525,6 +1536,12 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 126
   m_CollisionDetection: 0
+--- !u!1 &1686141604 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6986960017892066841, guid: c88c68b6d131848439f2c869ef875041,
+    type: 3}
+  m_PrefabInstance: {fileID: 1277959744}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1708459861
 GameObject:
   m_ObjectHideFlags: 0

@@ -86,11 +86,10 @@ public class mqttForUR : MonoBehaviour
         if(count == 10 && isConnect){
             var message = new MqttApplicationMessageBuilder()
                 .WithTopic("harutakatopic/ur")
-                .WithPayload(Base.transform.rotation.z + "," + Sholder.transform.rotation.z + "," + Elbow.transform.rotation.z + "," + Wrist1.transform.rotation.z + "," + Wrist2.transform.rotation.z)
+                .WithPayload("\"robopose\":p[" + Base.transform.rotation.z + "," + Sholder.transform.rotation.z + "," + Elbow.transform.rotation.z + "," + Wrist1.transform.rotation.z + "," + Wrist2.transform.rotation.z + "]")
                 .WithExactlyOnceQoS()
                 .Build();
-            float[] test = new float[3]{0f,0f,0f};
-            Debug.Log(JsonUtility.ToJson(test));
+            Debug.Log("\"robopose\":p[" + Base.transform.rotation.z + "," + Sholder.transform.rotation.z + "," + Elbow.transform.rotation.z + "," + Wrist1.transform.rotation.z + "," + Wrist2.transform.rotation.z + "]");
             await mqttClient.PublishAsync(message);
             count = 0;
         }

@@ -35,7 +35,7 @@ public class HandTrackerForUR : MonoBehaviour
     private Vector3 initialTargetPosition;
     public float countDown = 3f;
     private float prevX = 0f;
-    private float prevY = 0f;
+    private float prevY = 180f;
     private Vector3 initisalHomePosition;
 
     // Start is called before the first frame update
@@ -91,23 +91,22 @@ public class HandTrackerForUR : MonoBehaviour
 
                     //position更新
                     target.transform.position = pos;
-                    //姿勢更新
-                    //target.transform.rotation = rot;
-                    if(mqtt.y < 15f && mqtt.y > -15f){
-                        if((Math.Abs(prevX - (-1f * mqtt.x + 80f))) > 10f){
-                            Vector3 wrist1Angles = new Vector3(0f, 0f, -1f * mqtt.x + 80f);
-                            Wrist1.transform.localEulerAngles = wrist1Angles;
-                            prevX = -1f * mqtt.x + 80f;
-                        }
+                    //
+                    Vector3 rot = target.transform.localEulerAngles;
+                    if(Mathf.Abs(prevX - mqtt.y) > 27f && Mathf.Abs(prevY - (mqtt.x + 180)) < 10f){
+                        rot.x = mqtt.y;
+                        prevX = rot.x;    
                     }
 
-                    if(Math.Abs(prevY - (mqtt.y - 90f)) > 20f){
-                        Vector3 wrist2Angles = new Vector3(-90f, 0f, mqtt.y - 90f);
-                        Wrist2.transform.localEulerAngles = wrist2Angles;
-                        prevY = mqtt.y - 90f;
+                    if(Mathf.Abs(prevY - (mqtt.x + 180)) > 10f && Mathf.Abs(prevX - mqtt.y) < 10f){
+                        rot.y = mqtt.x + 180f;
+                        rot.x = 0f;
+                        prevY = rot.y;    
                     }
-
-                    //target.transform.localEulerAngles = angles;
+                    rot.y = mqtt.x + 180f;
+                    rot.x = 0f;
+   
+                    target.transform.localEulerAngles = rot;
 
 
                     //ひとつ前の位置姿勢更新
