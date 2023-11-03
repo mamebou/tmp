@@ -103,8 +103,25 @@ public class HandTrackerForUR : MonoBehaviour
                         rot.x = 0f;
                         prevY = rot.y;    
                     }
-                    rot.y = mqtt.x + 180f;
-                    rot.x = 0f;
+
+                    if((mqtt.y + 180f) < 140f){
+                        rot.y = 110f;
+                    }
+                    else if((mqtt.y + 180f) > 200f){
+                        rot.y = 260f;
+                    }
+                    else{
+                        rot.y = 180f;
+                    }
+                    if(mqtt.x < -50f){
+                        rot.x = -90f;
+                    }
+                    else if(mqtt.x > 40f){
+                        rot.x = 90f;
+                    }
+                    else{
+                        rot.x = 0f;
+                    }
    
                     target.transform.localEulerAngles = rot;
 
