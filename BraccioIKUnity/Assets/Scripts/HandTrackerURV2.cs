@@ -42,6 +42,11 @@ public class HandTrackerURV2 : MonoBehaviour
     public bool isControlDirection = false;
     public bool isBeforeMoveRobot = false;
     public bool isFinishMove = true;
+    public GameObject fingerA;
+    public GameObject fingerB;
+    public GameObject ActualFingerA;
+    public GameObject ActualFingerB;
+    private bool previsOpenGrip = true;
 
     // Start is called before the first frame update
     void Start()
@@ -136,7 +141,18 @@ public class HandTrackerURV2 : MonoBehaviour
 
                 target.transform.localEulerAngles = rot;
 
-
+                if(mqtt.isOpenGripper != previsOpenGrip){
+                    if(mqtt.isOpenGripper == false){
+                        previsOpenGrip = false;
+                        fingerA.transform.localPosition = mqtt.fingerAClose;
+                        fingerB.transform.localPosition = mqtt.fingerBClose;
+                    }
+                    else{
+                        previsOpenGrip = true;
+                        fingerA.transform.localPosition = mqtt.initialFingerA;
+                        fingerB.transform.localPosition = mqtt.initialFingerB;
+                    }
+                }
 
 
                 //ひとつ前の位置姿勢更新
@@ -171,6 +187,8 @@ public class HandTrackerURV2 : MonoBehaviour
             actualTarget.transform.position = Vector3.MoveTowards(actualTarget.transform.position, target.transform.position, 0.01f);
             actualTarget.transform.rotation = Quaternion.RotateTowards(actualTarget.transform.rotation, target.transform.rotation, 0.7f);
             if((actualTarget.transform.position == target.transform.position) && (actualTarget.transform.rotation == target.transform.rotation)){
+                ActualFingerA.transform.position = fingerA.transform.position;
+                ActualFingerB.transform.position = fingerB.transform.position;
                 finishMove();
                 moveActualRobot = false;
                 isFinishMove = true;

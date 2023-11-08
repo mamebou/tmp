@@ -104,6 +104,11 @@ def notification_handler(sender: int, data: bytearray, **_kwargs):
                 print("control")
                 count = 0
                 m_client.publish(topic, "control")
+        elif (imu_data[0] == "gripper"):
+            if count > 20:
+                print("griiper")
+                count = 0
+                m_client.publish(topic, "gripper")
         else:
             print("imu")
             acc = np.array([float(imu_data[4]), float(imu_data[5]), float(imu_data[6])])

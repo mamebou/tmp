@@ -37,6 +37,9 @@ public class HandTrackerForUR : MonoBehaviour
     private float prevX = 0f;
     private float prevY = 180f;
     private Vector3 initisalHomePosition;
+    public GameObject fingerA;
+    public GameObject fingerB;
+    private bool previsOpenGrip = true;
 
     // Start is called before the first frame update
     void Start()
@@ -124,6 +127,18 @@ public class HandTrackerForUR : MonoBehaviour
                     }
    
                     target.transform.localEulerAngles = rot;
+                    if(mqtt.isOpenGripper != previsOpenGrip){
+                        if(mqtt.isOpenGripper == false){
+                            previsOpenGrip = false;
+                            fingerA.transform.localPosition = mqtt.fingerAClose;
+                            fingerB.transform.localPosition = mqtt.fingerBClose;
+                        }
+                        else{
+                            previsOpenGrip = true;
+                            fingerA.transform.localPosition = mqtt.initialFingerA;
+                            fingerB.transform.localPosition = mqtt.initialFingerB;
+                        }
+                    }
 
 
                     //ひとつ前の位置姿勢更新

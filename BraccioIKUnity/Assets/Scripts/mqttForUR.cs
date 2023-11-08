@@ -21,10 +21,25 @@ public class mqttForUR : MonoBehaviour
     public GameObject Elbow;
     public GameObject Wrist1;
     public GameObject Wrist2;
+    public GameObject fingerA;
+    public GameObject fingerB;
+    public Vector3 initialFingerA;
+    public Vector3 initialFingerB;
+    public Vector3 fingerAClose;
+    public Vector3 fingerBClose;
+    public bool isOpenGripper = true;
     
 
     async void Start()
     {
+        initialFingerA = fingerA.transform.localPosition;
+        initialFingerB = fingerB.transform.localPosition;
+        Vector3 tmp = fingerA.transform.localPosition;
+        tmp.z = 0.1f;
+        fingerAClose = tmp;
+        tmp = fingerB.transform.localPosition;
+        tmp.z = -0.1f;
+        fingerBClose = tmp;
         var factory = new MqttFactory();
         mqttClient = factory.CreateMqttClient();
 
@@ -62,23 +77,30 @@ public class mqttForUR : MonoBehaviour
 
         mqttClient.ApplicationMessageReceived += (s, e) =>
         {
+            
             string[] data = Encoding.UTF8.GetString(e.ApplicationMessage.Payload).Split(' ');
-            x = float.Parse(data[0]) * Mathf.Rad2Deg;
-            y = float.Parse(data[1]) * Mathf.Rad2Deg;
-            z = float.Parse(data[2]);
+            //nothing to do when receive control message in this version
+            if(data[0] == "control"){
+
+            }
+            else if(data[0] == "gripper"){//open or close gripper when receive gripper message
+                if(isOpenGripper == true){
+                    isOpenGripper = false;
+                }
+                else{
+                    isOpenGripper = true;
+                }
+            }
+            else{
+                x = float.Parse(data[0]) * Mathf.Rad2Deg;
+                y = float.Parse(data[1]) * Mathf.Rad2Deg;
+                z = float.Parse(data[2]);
+            }
         };
 
         await mqttClient.ConnectAsync(options);
 
         await mqttClient.SubscribeAsync(new TopicFilterBuilder().WithTopic("mytopic/mqtt").Build());
-
-        var message = new MqttApplicationMessageBuilder()
-            .WithTopic("harutakatopic/ur")
-            .WithPayload("Hello World")
-            .WithExactlyOnceQoS()
-            .Build();
-
-        await mqttClient.PublishAsync(message);
     }
 
     async void Update(){
@@ -89,7 +111,6 @@ public class mqttForUR : MonoBehaviour
                 .WithPayload("\"robopose\":p[" + Base.transform.rotation.z + "," + Sholder.transform.rotation.z + "," + Elbow.transform.rotation.z + "," + Wrist1.transform.rotation.z + "," + Wrist2.transform.rotation.z + "]")
                 .WithExactlyOnceQoS()
                 .Build();
-            Debug.Log("\"robopose\":p[" + Base.transform.rotation.z + "," + Sholder.transform.rotation.z + "," + Elbow.transform.rotation.z + "," + Wrist1.transform.rotation.z + "," + Wrist2.transform.rotation.z + "]");
             await mqttClient.PublishAsync(message);
             count = 0;
         }

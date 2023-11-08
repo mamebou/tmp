@@ -25,13 +25,27 @@ public class mqttForURV2 : MonoBehaviour
     public int isControl = 0;
     public GameObject handTracker;
     private HandTrackerURV2 tracker;
+    public GameObject fingerA;
+    public GameObject fingerB;
+    public Vector3 initialFingerA;
+    public Vector3 initialFingerB;
+    public Vector3 fingerAClose;
+    public Vector3 fingerBClose;
+    public bool isOpenGripper = true;
 
     async void Start()
     {
         tracker = handTracker.GetComponent<HandTrackerURV2>();
         var factory = new MqttFactory();
         mqttClient = factory.CreateMqttClient();
-
+        initialFingerA = fingerA.transform.localPosition;
+        initialFingerB = fingerB.transform.localPosition;
+        Vector3 tmp = fingerA.transform.localPosition;
+        tmp.z = 0.1f;
+        fingerAClose = tmp;
+        tmp = fingerB.transform.localPosition;
+        tmp.z = -0.1f;
+        fingerBClose = tmp;
         var options = new MqttClientOptionsBuilder()
             .WithTcpServer("test.mosquitto.org")
             .Build();
@@ -78,6 +92,14 @@ public class mqttForURV2 : MonoBehaviour
                     tracker.isControlDirection = true;
                     tracker.isBeforeMoveRobot = false;
                 }
+            }
+            else if(data[0] == "gripper"){
+                if(isOpenGripper == true){
+                    isOpenGripper = false;
+                }
+                else{
+                    isOpenGripper = true;
+                }                
             }
             else{
                 x = float.Parse(data[0]) * Mathf.Rad2Deg;

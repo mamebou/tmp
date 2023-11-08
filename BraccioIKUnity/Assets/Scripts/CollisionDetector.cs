@@ -14,10 +14,11 @@ public class CollisionDetector : MonoBehaviour
     }
 
     void OnCollisionEnter(Collision collision){
-        handTrackerForUR.homePosition.transform.position = handTrackerForUR.indexTip.transform.position;
-        handTrackerForUR.directionText.SetActive(true);
-        handTrackerForUR.homePosition.SetActive(true);
-        handTrackerForUR.isFinishCount = false;
-        Debug.Log("hello");
+        if(collision.gameObject.tag == "table"){
+            handTrackerForUR.homePosition.transform.position = handTrackerForUR.indexTip.transform.position;
+            handTrackerForUR.directionText.SetActive(true);
+            handTrackerForUR.homePosition.SetActive(true);
+            handTrackerForUR.isFinishCount = false;
+        }
     }
 }
