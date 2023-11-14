@@ -28,7 +28,6 @@ public class grabbedObjectTrace : MonoBehaviour
     }
 
     void OnCollisionStay(Collision collision){
-        Debug.Log("hello");
         if(collision.gameObject.tag == "hand" && mqtt.isOpenGripper == false){
             isFollow = true;
         }

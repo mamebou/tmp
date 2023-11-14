@@ -44,8 +44,8 @@ public class HandTrackerForUR : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        indexTip = GameObject.CreatePrimitive(PrimitiveType.Cube);  //表示用の立方体を作成
-        indexTip.transform.localScale = new Vector3(0.03f, 0.03f, 0.03f);  //大きさを指定
+        indexTip = GameObject.CreatePrimitive(PrimitiveType.Cube);  
+        indexTip.transform.localScale = new Vector3(0.03f, 0.03f, 0.03f);  
         mqtt = mqttManager.GetComponent<mqttForUR>();
         initialTargetPosition = target.transform.position;
         initisalHomePosition = homePosition.transform.position;
@@ -57,8 +57,8 @@ public class HandTrackerForUR : MonoBehaviour
     void Update()
     {
         if (HandJointUtils.TryGetJointPose(TrackedHandJoint.Palm, Handedness.Right, out MixedRealityPose pose)){
-            indexTip.transform.position = pose.Position; //座標を設定
-            indexTip.transform.rotation = pose.Rotation; //回転を設定 default pose.rotation
+            indexTip.transform.position = pose.Position; 
+            indexTip.transform.rotation = pose.Rotation; 
 
             if(isStart){
                 if(isFinishCount){
@@ -71,7 +71,7 @@ public class HandTrackerForUR : MonoBehaviour
                         drotation[2] = 0f;
                         isFirstDitect = false;
                     }else{
-                        //変化量
+                        //increase amount
                         dPosition[0] = indexTip.transform.position.x - pPos[0];
                         dPosition[1] = indexTip.transform.position.y - pPos[1];
                         dPosition[2] = indexTip.transform.position.z - pPos[2];
@@ -84,12 +84,6 @@ public class HandTrackerForUR : MonoBehaviour
                     pos.x = target.transform.position.x + dPosition[0] * adjust;
                     pos.y = target.transform.position.y + dPosition[1] * adjust;
                     pos.z = target.transform.position.z + dPosition[2] * adjust;
-
-                    //Quaternion rot = new Quaternion();
-                    //rot.x = mqtt.x;
-                    //rot.y = mqtt.z;
-                    //rot.z = mqtt.y;
-                    //rot.w = mqtt.w;
                     
 
                     //position更新
@@ -127,7 +121,7 @@ public class HandTrackerForUR : MonoBehaviour
                     }
    
                     target.transform.localEulerAngles = rot;
-                    if(mqtt.isOpenGripper != previsOpenGrip){
+                    if(mqtt.isOpenGripper != previsOpenGrip){// manage gripper
                         if(mqtt.isOpenGripper == false){
                             previsOpenGrip = false;
                             fingerA.transform.localPosition = mqtt.fingerAClose;

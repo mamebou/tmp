@@ -34,8 +34,8 @@ public class HandTrackingTest : MonoBehaviour
 
     void Start()
     {
-        indexTip = GameObject.CreatePrimitive(PrimitiveType.Cube);  //表示用の立方体を作成
-        indexTip.transform.localScale = new Vector3(0.03f, 0.03f, 0.03f);  //大きさを指定
+        indexTip = GameObject.CreatePrimitive(PrimitiveType.Cube);  
+        indexTip.transform.localScale = new Vector3(0.03f, 0.03f, 0.03f);  
         directionText.SetActive(false);
         IK = IKsolver.GetComponent<SolveIK>();
 
@@ -43,12 +43,11 @@ public class HandTrackingTest : MonoBehaviour
 
     void Update()
     {
-        //右手の人差し指の指先の位置情報を取得
+        
         if (HandJointUtils.TryGetJointPose(TrackedHandJoint.Palm, Handedness.Right, out MixedRealityPose pose))
         {
-            indexTip.transform.position = pose.Position; //座標を設定
-            indexTip.transform.rotation = pose.Rotation; //回転を設定 default pose.rotation
-
+            indexTip.transform.position = pose.Position; 
+            indexTip.transform.rotation = pose.Rotation; 
             if(isStart){
                 if(isFinishCount){
                     if(isFirstDitect == true){
@@ -60,7 +59,7 @@ public class HandTrackingTest : MonoBehaviour
                         drotation[2] = 0f;
                         isFirstDitect = false;
                     }else{
-                        //変化量
+                        //amount of change
                         dPosition[0] = indexTip.transform.position.x - pPos[0];
                         dPosition[1] = indexTip.transform.position.y - pPos[1];
                         dPosition[2] = indexTip.transform.position.z - pPos[2];
@@ -79,12 +78,11 @@ public class HandTrackingTest : MonoBehaviour
                     rot.y = target.transform.rotation.y + drotation[1];
                     rot.z = target.transform.rotation.z + drotation[2];
 
-                    //position更新
+                    //update position
                     target.transform.position = pos;
 
-                    //姿勢更新
+                    //update rotation
                     target.transform.rotation = rot;
-                    //ひとつ前の位置姿勢更新
 
                     pPos[0] = indexTip.transform.position.x;
                     pPos[1] = indexTip.transform.position.y;

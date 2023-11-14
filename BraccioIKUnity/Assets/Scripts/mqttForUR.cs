@@ -28,6 +28,7 @@ public class mqttForUR : MonoBehaviour
     public Vector3 fingerAClose;
     public Vector3 fingerBClose;
     public bool isOpenGripper = true;
+    private bool prevIsGripperOpen = true;
     
 
     async void Start()
@@ -48,20 +49,17 @@ public class mqttForUR : MonoBehaviour
             .Build();
 
         mqttClient.Connected += (s, e) =>{
-            Debug.Log("接続したときの処理");
+            Debug.Log("connected");
             isConnect = true;
         }; 
         mqttClient.Disconnected += async (s, e) =>
         {
-            Debug.Log("切断したときの処理");
+            Debug.Log("disconnected");
             isConnect = false;
             if (e.Exception == null)
             {
-                Debug.Log("意図した切断です");
                 return;
             }
-
-            Debug.Log("意図しない切断です。５秒後に再接続を試みます");
 
             await Task.Delay(TimeSpan.FromSeconds(5));
 
@@ -71,7 +69,7 @@ public class mqttForUR : MonoBehaviour
             }
             catch
             {
-                Debug.Log("再接続に失敗しました");
+                Debug.Log("fsild to connect");
             }
         };
 
@@ -106,12 +104,36 @@ public class mqttForUR : MonoBehaviour
     async void Update(){
         count++;
         if(count == 10 && isConnect){
-            var message = new MqttApplicationMessageBuilder()
-                .WithTopic("harutakatopic/ur")
-                .WithPayload("\"robopose\":p[" + Base.transform.rotation.z + "," + Sholder.transform.rotation.z + "," + Elbow.transform.rotation.z + "," + Wrist1.transform.rotation.z + "," + Wrist2.transform.rotation.z + "]")
-                .WithExactlyOnceQoS()
-                .Build();
-            await mqttClient.PublishAsync(message);
+            if(prevIsGripperOpen != isOpenGripper){
+                if(isOpenGripper == true){
+                    var message = new MqttApplicationMessageBuilder()
+                        .WithTopic("qgwqgfnqehfqh6354l/to")
+                        .WithPayload("{\"roboPose\":\"p[" + 9f + "," +  9f + "," + 9f + "," + 9f + "," + 9f + "," + 9f + "]\"}")
+                        .WithExactlyOnceQoS()
+                        .Build();
+                    await mqttClient.PublishAsync(message);
+                    prevIsGripperOpen = true;
+                    await Task.Delay(1000);
+                }
+                else{
+                    var message = new MqttApplicationMessageBuilder()
+                        .WithTopic("qgwqgfnqehfqh6354l/to")
+                        .WithPayload("{\"roboPose\":\"p[" + 9f + "," +  9f + "," + 9f + "," + 9f + "," + 9f + "," + 9f + "]\"}")
+                        .WithExactlyOnceQoS()
+                        .Build();
+                    await mqttClient.PublishAsync(message);
+                    prevIsGripperOpen = false;
+                    await Task.Delay(1000);
+                }
+            }
+            else{
+                var message = new MqttApplicationMessageBuilder()
+                    .WithTopic("qgwqgfnqehfqh6354l/to")
+                    .WithPayload("{\"roboPose\":\"p[" + ((target.transform.localPosition.x)) + "," +  (target.transform.localPosition.y) + "," + (target.transform.localPosition.z) + "," + (target.transform.localEulerAngles.x * Mathf.Deg2Rad ) + "," + (target.transform.localEulerAngles.y * Mathf.Deg2Rad ) + "," + 0f + "]\"}")
+                    .WithExactlyOnceQoS()
+                    .Build();
+                await mqttClient.PublishAsync(message);
+            }
             count = 0;
         }
     }

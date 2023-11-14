@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
+// detect collision between robot and table for safty
 public class CollisionDetector : MonoBehaviour
 {
     public GameObject handTracker;

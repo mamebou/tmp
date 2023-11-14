@@ -19,7 +19,7 @@ public class grabbedObjectController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(mqtt.isOpenGripper == true)
+        if(mqtt.isOpenGripper == true)// if gripper open or not
             isFollow = false;
         if(isFollow == true){
             followPos = fingerA.transform.position;
@@ -28,7 +28,6 @@ public class grabbedObjectController : MonoBehaviour
     }
 
     void OnCollisionStay(Collision collision){
-        Debug.Log("hello");
         if(collision.gameObject.tag == "hand" && mqtt.isOpenGripper == false){
             isFollow = true;
         }

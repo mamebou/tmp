@@ -45,20 +45,17 @@ public class mqttTrace : MonoBehaviour
             .Build();
 
         mqttClient.Connected += (s, e) =>{
-            Debug.Log("接続したときの処理");
+            Debug.Log("connected");
             isConnect = true;
         }; 
         mqttClient.Disconnected += async (s, e) =>
         {
-            Debug.Log("切断したときの処理");
+            Debug.Log("disconnected");
             isConnect = false;
             if (e.Exception == null)
             {
-                Debug.Log("意図した切断です");
                 return;
             }
-
-            Debug.Log("意図しない切断です。５秒後に再接続を試みます");
 
             await Task.Delay(TimeSpan.FromSeconds(5));
 
@@ -68,7 +65,7 @@ public class mqttTrace : MonoBehaviour
             }
             catch
             {
-                Debug.Log("再接続に失敗しました");
+                Debug.Log("faild to connect");
             }
         };
 

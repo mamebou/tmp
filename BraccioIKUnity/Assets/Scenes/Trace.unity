@@ -1196,6 +1196,7 @@ MonoBehaviour:
   target: {fileID: 1603195768}
   mqttManager: {fileID: 1118025027}
   isWrite: 0
+  table: {fileID: 2111605250}
 --- !u!1 &1603195768 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -927199367670048503, guid: f795b5118c0744de3bcac7a83315a637,
@@ -1515,6 +1516,12 @@ MonoBehaviour:
   m_FirstSelected: {fileID: 0}
   m_sendNavigationEvents: 1
   m_DragThreshold: 10
+--- !u!1 &2111605250 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5110037265013110935, guid: 1cd92536b9643b74d9f9ef5ad90ec618,
+    type: 3}
+  m_PrefabInstance: {fileID: 30040535}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2127664707 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5010966307717186755, guid: 28a3c311d36461d43ab15fa3e15faec8,

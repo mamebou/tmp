@@ -20,7 +20,9 @@ public class ProgressManager : MonoBehaviour
     String path;
     private int count = 0;
     private int size = 0;
+    private float adjustHeight = 0f;
     List<List<String>> dir = new List<List<String>> ();
+    public GameObject table;
     // Start is called before the first frame update
     void Start()
     {
@@ -83,6 +85,16 @@ public class ProgressManager : MonoBehaviour
                 fingerA.transform.localPosition = fingerAClose;
                 fingerB.transform.localPosition = fingerBClose;
             }
+        }
+        else if(data[0] == "initialPose"){
+            pos.x = float.Parse(data[1]) + table.transform.position.x;
+            pos.y = float.Parse(data[2]) + table.transform.position.y;
+            pos.z = float.Parse(data[3]) + table.transform.position.z;
+            rot.x = float.Parse(data[4]);
+            rot.y = float.Parse(data[5]);
+            rot.z = float.Parse(data[6]);
+            target.transform.position = pos;
+            target.transform.localEulerAngles = rot;            
         }
     }
 }

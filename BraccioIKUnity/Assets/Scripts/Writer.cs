@@ -18,6 +18,7 @@ public class Writer : MonoBehaviour
     private Vector3 drotation;
     public bool isWrite = false;
     private bool prevIsWrite = false;
+    public GameObject table;
     // Start is called before the first frame update
     void Start()
     {
@@ -37,7 +38,8 @@ public class Writer : MonoBehaviour
             //overweite
             sw = new StreamWriter(file, false, Encoding.UTF8);
         }
-        Debug.Log(file);
+        sw.WriteLine("initialPose " + Convert.ToString(target.transform.position.x - table.transform.position.x) + " " + Convert.ToString(target.transform.position.y - table.transform.position.y) + " " + Convert.ToString(target.transform.position.z - table.transform.position.z) + " " + Convert.ToString(target.transform.localEulerAngles.x) + " " + Convert.ToString(target.transform.localEulerAngles.y) + " " + Convert.ToString(target.transform.localEulerAngles.z));
+        sw.Flush();
     }
 
     // Update is called once per frame
@@ -56,6 +58,7 @@ public class Writer : MonoBehaviour
             }
             dPosition = target.transform.position - prevPos;
             drotation = target.transform.localEulerAngles - prevRot;
+            // write movement infoemation to internal file
             sw.WriteLine("pose " + Convert.ToString(dPosition.x) + " " + Convert.ToString(dPosition.y) + " " + Convert.ToString(dPosition.z) + " " + Convert.ToString(drotation.x) + " " + Convert.ToString(drotation.y) + " " + Convert.ToString(drotation.z));
             sw.Flush();
             prevPos = target.transform.position;

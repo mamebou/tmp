@@ -71,8 +71,8 @@ public class handTrackerTrace : MonoBehaviour
         }
 
         if (HandJointUtils.TryGetJointPose(TrackedHandJoint.Palm, Handedness.Right, out MixedRealityPose pose) && isStart){
-            indexTip.transform.position = pose.Position; //座標を設定
-            indexTip.transform.rotation = pose.Rotation; //回転を設定 default pose.rotation
+            indexTip.transform.position = pose.Position; //set position
+            indexTip.transform.rotation = pose.Rotation; //set rotation
             if(isFinishCount){
                 homePosition.transform.position = pose.Position;
                 if(isFirstDitect == true){
@@ -148,7 +148,7 @@ public class handTrackerTrace : MonoBehaviour
                 }
 
 
-                //ひとつ前の位置姿勢更新
+                //previouse position and posture
 
                 pPos[0] = indexTip.transform.position.x;
                 pPos[1] = indexTip.transform.position.y;

@@ -184,8 +184,8 @@ public class HandTrackerURV2 : MonoBehaviour
             beforeMoveRobot(); 
 
         if(moveActualRobot == true){
-            actualTarget.transform.position = Vector3.MoveTowards(actualTarget.transform.position, target.transform.position, 0.01f);
-            actualTarget.transform.rotation = Quaternion.RotateTowards(actualTarget.transform.rotation, target.transform.rotation, 0.7f);
+            actualTarget.transform.position = Vector3.MoveTowards(actualTarget.transform.position, target.transform.position, 0.001f);
+            actualTarget.transform.rotation = Quaternion.RotateTowards(actualTarget.transform.rotation, target.transform.rotation, 0.07f);
             if((actualTarget.transform.position == target.transform.position) && (actualTarget.transform.rotation == target.transform.rotation)){
                 ActualFingerA.transform.position = fingerA.transform.position;
                 ActualFingerB.transform.position = fingerB.transform.position;
