@@ -71,8 +71,6 @@ def convert_euler_to_Rxyz(x):
     Rxyz = Rz @ Ry @ Rx
     return Rxyz
 
-# ESP32のデバイスを識別するためのUUID (これはデバイスにより異なります) 
-
 # Nordic UART Service (NUS)
 NUS_UUID = '6e400002-b5a3-f393-e0a9-e50e24dcca9e'
 RX_UUID = '93222d1f-2837-4f1d-88d0-e30b6d1935e1'  # RX Characteristic UUID (from ESP32 to Computer)
