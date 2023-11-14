@@ -139,7 +139,6 @@ async def run():
     global m_client
     m_client = connect_mqtt()
     m_client.loop_start()
-    # 1. 周囲のBLE発信をスキャン
     scanner = BleakScanner()
     devices = await scanner.discover()
 
@@ -152,11 +151,9 @@ async def run():
 
 
     try:
-        # 2. クライアント（ESP32などのデバイス）とデータのやり取りをする
         print(clients)
         for client in clients:
             await client.connect()
-            # Characteristicの情報を得るために記述。本番ではコメントアウトしても良い
             #for service in client.services:
                 #print('---------------------')
                 #print(f"service uuid:{service.uuid}, description:{service.description}")

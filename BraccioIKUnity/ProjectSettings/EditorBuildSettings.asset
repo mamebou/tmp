@@ -8,7 +8,7 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/BraccioIK.unity
     guid: 673689650e143469e90e60b5b3377ff7
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/ur5control.unity
     guid: d8e32b99113738946934025169793d7a
   - enabled: 0
@@ -17,6 +17,9 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/URv2.unity
     guid: 298ae33067c63d94782e216d0ab9398e
+  - enabled: 1
+    path: Assets/Scenes/Trace.unity
+    guid: ff376bc10740a794992de83360899c69
   m_configObjects:
     Unity.XR.WindowsMR.Settings: {fileID: 11400000, guid: 51098f973d8edc946bceaa8267a2ea61,
       type: 2}
