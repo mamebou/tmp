@@ -32,7 +32,7 @@ public class SolveIK : MonoBehaviour {
 	[Range(0.0f, 180.0f)]
 	public float thetaWristRotation = 0f;
 	[Range(10.0f, 73.0f)]
-	public float thetaGripper = 10f;
+	public float thetaGripper = 1000f;
 
 	public GameObject[] arms = new GameObject[5];
 
@@ -75,7 +75,6 @@ public class SolveIK : MonoBehaviour {
 		arms[0].transform.localRotation = Quaternion.Euler(new Vector3(0f, thetaBase, 0f));
 		arms[1].transform.localRotation = Quaternion.Euler(new Vector3(0f, 0f, thetaShoulder - 90f));
 		arms[2].transform.localRotation = Quaternion.Euler(new Vector3(0f, 0f, thetaElbow - 90f));
-		Debug.Log(mqttTest.thetaWristVertical);
 		arms[3].transform.localRotation = Quaternion.RotateTowards(arms[3].transform.localRotation, Quaternion.Euler(new Vector3(0f, 0f, -1f * mqttTest.thetaWristVertical)), 0.5f);
 		arms[4].transform.localRotation = Quaternion.Euler(new Vector3(0f, mqttTest.thetaWristRotation, 0f));
 

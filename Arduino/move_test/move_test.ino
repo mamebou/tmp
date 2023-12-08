@@ -14,7 +14,7 @@ void setup() {
   Braccio.begin();
   time = millis();
   Serial.println(time);
-  Braccio.ServoMovement(90, 90, 90, 90, 90, 90, 10);
+  Braccio.ServoMovement(90, 90, 60, 90, 90, 90, 50);
 }
 
 void loop() {

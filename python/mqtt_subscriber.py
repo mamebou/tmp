@@ -11,7 +11,7 @@ client_id = f'python-mqtt-{random.randint(0, 100)}'
 # username = 'emqx'
 # password = 'public'
 ser = serial.Serial()
-ser.port = "COM8"
+ser.port = "COM5"
 ser.baudrate = 115200
 ser.setDTR(False) 
 ser.open() 
@@ -32,8 +32,10 @@ def connect_mqtt() -> mqtt_client:
 
 
 def subscribe(client: mqtt_client):
+    print("hello")
     def on_message(client, userdata, msg):
         c = ser.readline()
+        print(msg.payload.decode())
         ser.write(bytes(msg.payload.decode(), 'UTF-8'))
     client.subscribe(topic)
     client.on_message = on_message

@@ -68,36 +68,29 @@ public class MQTTTest : MonoBehaviour
 
         mqttClient.ApplicationMessageReceived += (s, e) =>
         {
-            Math.Round(10f, 1);
-            var stringBuilder = new StringBuilder();
-            stringBuilder.AppendLine("recieve");
-            stringBuilder.AppendLine($"Topic = {e.ApplicationMessage.Topic}");
-            stringBuilder.AppendLine($"Payload = {Encoding.UTF8.GetString(e.ApplicationMessage.Payload)}");
-            stringBuilder.AppendLine($"QoS = {e.ApplicationMessage.QualityOfServiceLevel}");
-            stringBuilder.AppendLine($"Retain = {e.ApplicationMessage.Retain}");
             string[] data = Encoding.UTF8.GetString(e.ApplicationMessage.Payload).Split(' ');
-            Debug.Log(data[0] + " " + data[1] + " " + data[2]);
-            if(tracker.isFinishCount && tracker.isStart){
-                currentThetaWristVertical = roundOnePlace(float.Parse(data[0]) * Mathf.Rad2Deg);
-                if(prevThetaWristVertical == currentThetaWristVertical && currentThetaWristVertical == secondPrevThetaWristVertical){
-                    thetaWristVertical = roundOnePlace(float.Parse(data[0]) * Mathf.Rad2Deg);
-                }
-                prevThetaWristVertical = currentThetaWristVertical;
-                secondPrevThetaWristVertical = prevThetaWristVertical;
-            }
-            thetaWristRotation = 90f;
-            numButton = int.Parse(data[3]);
-            rcvCount++;
-            if(rcvCount == 10){
-                if(numButton < 2){
+            if(data[0] == "gripper"){
+                if(isGrip == true){
                     isGrip = false;
                 }
                 else{
                     isGrip = true;
                 }
-                rcvCount = 0;
             }
-            wait = false;
+            else{
+                if(tracker.isFinishCount && tracker.isStart){
+                    currentThetaWristVertical = roundOnePlace(float.Parse(data[0]) * Mathf.Rad2Deg);
+                    if(prevThetaWristVertical == currentThetaWristVertical && currentThetaWristVertical == secondPrevThetaWristVertical){
+                        thetaWristVertical = roundOnePlace(float.Parse(data[0]) * Mathf.Rad2Deg);
+                    }
+                    prevThetaWristVertical = currentThetaWristVertical;
+                    secondPrevThetaWristVertical = prevThetaWristVertical;
+                }
+                thetaWristRotation = 90f;
+                numButton = int.Parse(data[3]);
+                rcvCount++;
+                wait = false;
+            }
         };
 
         await mqttClient.ConnectAsync(options);
@@ -111,19 +104,17 @@ public class MQTTTest : MonoBehaviour
         if(count == 10){
 
             if(isGrip){
-                IK.thetaGripper = 60f;
+                IK.thetaGripper = 80f;
             }
             else{
-                IK.thetaGripper = 10f;
+                IK.thetaGripper = 0f;
             }
-
-
 
             var message = new MqttApplicationMessageBuilder()
                 .WithTopic("johnson65/helloworld")
                 .WithPayload(Mathf.RoundToInt(IK.thetaBase) + "," + 
-                            (280f - (Mathf.RoundToInt(IK.thetaShoulder) + 50f)) + "," + 
-                            (180f - Mathf.RoundToInt(IK.thetaElbow - 20f)) + "," + 
+                            (280f - (Mathf.RoundToInt(IK.thetaShoulder) + 100f)) + "," + 
+                            (180f - Mathf.RoundToInt(IK.thetaElbow)) + "," + 
                             (thetaWristVertical + 90f) + "," + 
                             Mathf.RoundToInt(thetaWristRotation) + "," + 
                             Mathf.RoundToInt(IK.thetaGripper) + ";")
@@ -137,9 +128,9 @@ public class MQTTTest : MonoBehaviour
             }
 
             try{
-                if(wait == false && tracker.isFinishCount && tracker.isStart){
+                if(tracker.isFinishCount && tracker.isStart){
+                    Debug.Log("publish");
                     await mqttClient.PublishAsync(message);
-                    wait = true;
                 }
                 
             }
