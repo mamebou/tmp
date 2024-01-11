@@ -11,11 +11,13 @@ public class RobotController : MonoBehaviour
     private bool isDownButtonPress = false;
     private bool isFrontButtonPress = false;
     private bool isBackButtonPress = false;
+    public GameObject IKControl;
+    Vector3 position;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        position = IKControl.transform.position;
     }
 
     // Update is called once per frame
@@ -23,33 +25,39 @@ public class RobotController : MonoBehaviour
     {
         if (isRightButtonPress)
         {
-            Debug.Log("hello");
+            position.x += 0.0001f;
+            IKControl.transform.position = position;
         }
 
         if (isLeftButtonPress)
         {
-            Debug.Log("left");
+            position.x -= 0.0001f;
+            IKControl.transform.position = position;
         }
 
         if (isUpButtonPress)
         {
-            Debug.Log("up");
+            position.y += 0.0001f;
+            IKControl.transform.position = position;
         }
 
         if (isDownButtonPress)
         {
-            Debug.Log("down");
+            position.y -= 0.0001f;
+            IKControl.transform.position = position;
         }
 
         if (isFrontButtonPress)
         {
-            Debug.Log("fron");
+            position.z += 0.0001f;
+            IKControl.transform.position = position;
 
         }
 
         if (isBackButtonPress)
         {
-            Debug.Log("back");
+            position.z -= 0.0001f;
+            IKControl.transform.position = position;
         }
     }
 
