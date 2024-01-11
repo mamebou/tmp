@@ -75,7 +75,7 @@ public class SolveIK : MonoBehaviour {
 		arms[0].transform.localRotation = Quaternion.Euler(new Vector3(0f, thetaBase, 0f));
 		arms[1].transform.localRotation = Quaternion.Euler(new Vector3(0f, 0f, thetaShoulder - 90f));
 		arms[2].transform.localRotation = Quaternion.Euler(new Vector3(0f, 0f, thetaElbow - 90f));
-		arms[3].transform.localRotation = Quaternion.RotateTowards(arms[3].transform.localRotation, Quaternion.Euler(new Vector3(0f, 0f, -1f * mqttTest.thetaWristVertical)), 0.5f);
+		arms[3].transform.localRotation = Quaternion.Euler(new Vector3(0f, 0f, thetaWristVertical + 90f));
 		arms[4].transform.localRotation = Quaternion.Euler(new Vector3(0f, mqttTest.thetaWristRotation, 0f));
 
 		// Debug.Log(thetaBase);
