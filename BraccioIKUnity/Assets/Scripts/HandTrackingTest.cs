@@ -26,7 +26,6 @@ public class HandTrackingTest : MonoBehaviour
     public GameObject startButton;
     public GameObject resetButton;
     public float countDown = 3f;
-    public GameObject directionText;
     public bool resetRobot = false;
     public GameObject IKsolver;
     private SolveIK IK;
@@ -36,7 +35,6 @@ public class HandTrackingTest : MonoBehaviour
     {
         indexTip = GameObject.CreatePrimitive(PrimitiveType.Cube);  
         indexTip.transform.localScale = new Vector3(0.03f, 0.03f, 0.03f);  
-        directionText.SetActive(false);
         IK = IKsolver.GetComponent<SolveIK>();
 
     }
@@ -97,7 +95,6 @@ public class HandTrackingTest : MonoBehaviour
                         if(countDown < 0f){
                             isFinishCount = true;
                             homePosition.SetActive(false);
-                            directionText.SetActive(false);
                         }
                     }
                     else{
@@ -127,7 +124,6 @@ public class HandTrackingTest : MonoBehaviour
         startButton.SetActive(false);
         resetButton.SetActive(false);
         if(!isFinishCount){
-            directionText.SetActive(true);
             homePosition.SetActive(true);
         }
         isStart = true;

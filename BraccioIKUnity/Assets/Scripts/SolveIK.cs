@@ -12,8 +12,6 @@ public class SolveIK : MonoBehaviour {
 
 	public Vector3 targetPosition;
 	public Vector3 currentPosition;
-	public GameObject Text;
-	private TMP_Text textComponent;
 	public GameObject mqtt;
 	private MQTTTest mqttTest;
 	public GameObject handTracker;
@@ -50,7 +48,6 @@ public class SolveIK : MonoBehaviour {
 		/* pre-calculations */
 		hum_sq = HUMERUS*HUMERUS;
 		uln_sq = ULNA*ULNA;
-		textComponent = Text.GetComponent<TMP_Text>();
 		mqttTest = mqtt.GetComponent<MQTTTest>();
 		tracker = handTracker.GetComponent<HandTrackingTest>();
 		initialTargetPosition = targetPosition;
@@ -66,7 +63,6 @@ public class SolveIK : MonoBehaviour {
 		}
 
 		if(useIK){
-			textComponent.text = "X " + targetPosition.x + "\ny " + targetPosition.y + "\nz " + targetPosition.z + "\ngrab " + mqttTest.isGrip + "\nrotx " + mqttTest.thetaWristVertical + "\nrotz " + mqttTest.thetaWristRotation;
 			SetArm(targetPosition.x, targetPosition.y, targetPosition.z, autoEnd);
 		}
 		// Update robot arm model withou gripper
@@ -110,9 +106,9 @@ public class SolveIK : MonoBehaviour {
 
 		// Keep end point horizontal
 		if (endHorizontal) {
-			float end_x = arms [4].transform.position.x;
-			float end_y = arms [4].transform.position.y;
-			float end_z = arms [4].transform.position.z;
+			float end_x = arms[4].transform.position.x;
+			float end_y = arms[4].transform.position.y;
+			float end_z = arms[4].transform.position.z;
 
 			float end_last_angle = thetaWristVertical;
 
