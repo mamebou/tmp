@@ -30,6 +30,7 @@ public class MQTTForBUtton : MonoBehaviour
     private float currentThetaWristVertical = 0f;
     int gripCount = 5;
     bool changeGrip = true;    
+    float thetaGripper = 0f;
 
 
     async void Start()
@@ -112,20 +113,22 @@ public class MQTTForBUtton : MonoBehaviour
         count++;;
         if(count == 10){
             if(isGrip){
-                IK.thetaGripper = 80f;
+                thetaGripper = 80f;
             }
             else{
-                IK.thetaGripper = 0f;
+                thetaGripper = 0f;
             }
+
+            Debug.Log(isGrip);
 
             var message = new MqttApplicationMessageBuilder()
                 .WithTopic("johnson65/helloworld")
                 .WithPayload(Mathf.RoundToInt(IK.thetaBase) + "," + 
                             (280f - (Mathf.RoundToInt(IK.thetaShoulder) + 100f)) + "," + 
                             (180f - Mathf.RoundToInt(IK.thetaElbow)) + "," + 
-                            (thetaWristVertical + 90f) + "," + 
+                            (-1f * IK.controller.rotation.z + 90f) + "," + 
                             Mathf.RoundToInt(thetaWristRotation) + "," + 
-                            Mathf.RoundToInt(IK.thetaGripper) + ";")
+                            thetaGripper + ";")
                 .WithExactlyOnceQoS()
                 .Build();            
             
@@ -136,14 +139,12 @@ public class MQTTForBUtton : MonoBehaviour
             }
 
             try{
-                if(tracker.isFinishCount && tracker.isStart){
-                    Debug.Log("publish");
-                    await mqttClient.PublishAsync(message);
-                }
+                await mqttClient.PublishAsync(message);
+            
                 
             }
             catch{
-  
+                Debug.Log("faild publish");
             }
             count = 0;
         }

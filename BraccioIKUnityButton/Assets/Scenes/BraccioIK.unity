@@ -323,6 +323,7 @@ MonoBehaviour:
   currentPosition: {x: 0, y: 0, z: 0}
   mqtt: {fileID: 658642362}
   UIController: {fileID: 1839612215}
+  controller: {fileID: 0}
   handTracker: {fileID: 540377499}
   resetPublish: 0
   initialTargetPosition: {x: 0, y: 0, z: 0}
@@ -2171,6 +2172,7 @@ MonoBehaviour:
   rotation: {x: 0, y: 0, z: 0}
   isGrab: 0
   textArea: {fileID: 1223543065}
+  mqtt: {fileID: 658642362}
   exController: {fileID: 3203192901357976137}
 --- !u!4 &1839612217
 Transform:

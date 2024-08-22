@@ -130,7 +130,7 @@ public class MQTTTest : MonoBehaviour
                 .WithPayload(Mathf.RoundToInt(IK.thetaBase) + "," + 
                             (280f - (Mathf.RoundToInt(IK.thetaShoulder) + 100f)) + "," + 
                             (180f - Mathf.RoundToInt(IK.thetaElbow)) + "," + 
-                            (thetaWristVertical + 90f) + "," + 
+                            (-1f * thetaWristVertical + 90f) + "," + 
                             Mathf.RoundToInt(thetaWristRotation) + "," + 
                             Mathf.RoundToInt(IK.thetaGripper) + ";")
                 .WithExactlyOnceQoS()

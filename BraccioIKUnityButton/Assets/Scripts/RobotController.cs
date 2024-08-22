@@ -20,6 +20,8 @@ public class RobotController : MonoBehaviour
     public bool isGrab = false;
     public GameObject textArea;
     private TMPro.TMP_Text text;
+    public GameObject mqtt;
+    private MQTTForBUtton mqttForButton;
     //実験用
     public GameObject exController;
     private ExperimentManager exManager;
@@ -31,6 +33,7 @@ public class RobotController : MonoBehaviour
         position = IKControl.transform.position;
         rotation = IKControl.transform.rotation.eulerAngles;
         text = textArea.GetComponent<TMPro.TMP_Text>();
+        mqttForButton = mqtt.GetComponent<MQTTForBUtton>();
         //実験用
         exManager = exController.GetComponent<ExperimentManager>();
     }
@@ -166,6 +169,7 @@ public class RobotController : MonoBehaviour
 
     public void grab(){
         isGrab = !isGrab;
+        mqttForButton.isGrip = !mqttForButton.isGrip;
     }
 
 }

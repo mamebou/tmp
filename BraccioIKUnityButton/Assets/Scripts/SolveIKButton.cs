@@ -15,7 +15,7 @@ public class SolveIKButton : MonoBehaviour {
 	public GameObject mqtt;
 	private MQTTForBUtton mqttTest;
 	public GameObject UIController;
-	private RobotController controller;
+	public RobotController controller;
 	public GameObject handTracker;
 	private HandTrackingButton tracker;
 	public bool resetPublish = false;
