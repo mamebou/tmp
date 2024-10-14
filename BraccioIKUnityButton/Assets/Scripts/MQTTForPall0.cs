@@ -8,7 +8,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class MQTTTest : MonoBehaviour
+public class MQTTForPall0 : MonoBehaviour
 {
     IMqttClient mqttClient;
     SolveIK IK;
@@ -76,53 +76,35 @@ public class MQTTTest : MonoBehaviour
         mqttClient.ApplicationMessageReceived += (s, e) =>
         {
             string[] data = Encoding.UTF8.GetString(e.ApplicationMessage.Payload).Split(' ');
-            // this part is for harutaka device
-            // int pressure = int.Parse(data[2]);
-            // inputValue = float.Parse(data[1]);
-            // if(pressure > 2500){
-            //     gripCount--;
-            //     if(gripCount < 0 && changeGrip){
-            //         isGrip = !isGrip;
-            //         gripCount = 3;
-            //         changeGrip = false;
-            //     }
-            // }
-
-            // if(pressure < 700){
-            //     gripCount--;
-            //     if(gripCount < 0){
-            //         changeGrip = true;
-            //         gripCount = 3;
-            //     }
-            // }
-
-            // if(tracker.isFinishCount && tracker.isStart){
-            //     if(inputValue > 50f && thetaWristVertical <= 90f){
-            //         thetaWristVertical += 3f;
-            //     }
-            //     else if(inputValue < -50f && thetaWristVertical >= -90f){
-            //         thetaWristVertical -= 3f;
-            //     }
-            // }
-
-            //this part is for pall0
-            if(data[0] == "gripper"){
-                isGrip = !isGrip;
-            }
-            else{
-                inputValue = float.Parse(data[0]) * Mathf.Rad2Deg;
+            Debug.Log(data[0] + " " + data[1] + " " + data[2]);
+            int pressure = int.Parse(data[2]);
+            inputValue = float.Parse(data[1]);
+            if(pressure > 2500){
+                gripCount--;
+                if(gripCount < 0 && changeGrip){
+                    isGrip = !isGrip;
+                    gripCount = 3;
+                    changeGrip = false;
+                }
             }
 
-Debug.Log(inputValue);
+            if(pressure < 700){
+                gripCount--;
+                if(gripCount < 0){
+                    changeGrip = true;
+                    gripCount = 3;
+                }
+            }
 
             if(tracker.isFinishCount && tracker.isStart){
-                if(inputValue > 50 && thetaWristVertical <= 90){
+                if(inputValue > 50f && thetaWristVertical <= 90f){
                     thetaWristVertical += 3f;
                 }
-                else if(inputValue < -50 && thetaWristVertical >= -90){
+                else if(inputValue < -50f && thetaWristVertical >= -90f){
                     thetaWristVertical -= 3f;
                 }
             }
+
 
         };
 
@@ -205,9 +187,5 @@ Debug.Log(inputValue);
         await mqttClient.DisconnectAsync();
     }
 
-    public double ToAngle(double radian)
-    {
-        return radian * 180 / Math.PI;
-    }
 
 }
